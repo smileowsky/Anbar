@@ -1,0 +1,165 @@
+{% extends 'layout.html' %}
+
+{% block 'content' %}
+
+{% if messages %}
+<div class="alert alert-dismissible fade show" role="alert">
+    {% for message in messages %}
+    {% if 'success' in message.tags %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif 'error' in message.tags %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif 'warning' in message.tags %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if edit %}
+<div class="alert alert-primary" role="alert">
+    <h1>Assignments</h1>
+    <form method="post" action="{% url 'assignment_update' edit.id %}">
+        {% csrf_token %}
+        Performer name:
+        <select name="staff_id" class="form-control">
+            <option value="">Choose staff member...</option>
+            {% for staff_obj in staffs %}
+            {% if staff_obj.id == edit.staff_id_id%}
+            <option selected value="{{staff_obj.id}}">{{staff_obj.name}} {{staff_obj.surname}} /
+                {{staff_obj.pos_id.dep_id.department_name}} / {{staff_obj.pos_id.positions}}</option>
+            {% else %}
+            <option value="{{staff_obj.id}}">{{staff_obj.staff_id.name}} /
+                {{staff_obj.staff_id.pos_id.dep_id.department_name}} / {{staff_obj.pos_id.positions}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        Assignment name:
+        <textarea type="textarea" name="assign_n" class="form-control"
+            placeholder="Enter assignment name...">{{edit.assignment_name}}</textarea>
+        Deadline:
+        <input type="datetime-local" name="deadline" value="{{edit.deadline}}" class="form-control"><br>
+        <button name="update" class="btn btn-primary">Update</button>
+        <a href="{% url 'assignments' %}"><button type="button" class="btn btn-danger">Cancel</button></a>
+    </form>
+</div>
+
+{% else %}
+<div class="alert alert-primary" role="alert">
+    <h1>Assignments</h1>
+    <form method="post">
+        {% csrf_token %}
+        Performer name:
+        <select name="staff_id" class="form-control">
+            <option value="">Choose staff member...</option>
+            {% for staff_obj in staffs %}
+            <option value="{{staff_obj.id}}">{{staff_obj.name}} {{staff_obj.surname}} /
+                {{staff_obj.pos_id.dep_id.department_name}} / {{staff_obj.pos_id.positions}}</option>
+            {% endfor %}
+        </select>
+        Assignment name:
+        <textarea type="textarea" name="assign_n" class="form-control"
+            placeholder="Enter assignment name..."></textarea>
+        Deadline:
+        <input type="datetime-local" name="deadline" class="form-control"><br>
+        <button name="add" class="btn btn-primary">Add</button>
+    </form>
+</div>
+
+{% if assignment %}
+<div class="alert alert-danger" role="alert">
+    Do you want to delete assignment?
+    <a class="btn btn-success" href="{% url 'assignment_del_conf' assignment.id %}">Yes</a>
+    <a class="btn btn-danger" href="{% url 'assignments' %}">No</a>
+</div>
+{% endif %}
+
+{% if del_all %}
+<div class="alert alert-danger" role="alert">
+    Do you want to delete all selected items?<br>
+    <form method="post">
+        {% csrf_token %}
+        {% for id in del_all %}
+        <input type="hidden" name="x[]" value="{{id}}">
+        {% endfor %}
+        <button class="btn btn-success" name="confirm_delete_all">Yes</button>
+        <button class="btn btn-danger">No</button><br>
+    </form>
+</div>
+{% endif %}
+
+{% endif %}
+
+{% if number > 0 %}
+<div class="alert alert-primary" role="alert">
+    There are <b>{{number}}</b> assignments
+</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <table class="table table-success table-striped" id="table">
+
+        <thead>
+            <th>#</th>
+            <th>Assignment name</th>
+            <th>Performer name</th>
+            <th>Department</th>
+            <th>Position</th>
+            <th>Date of issue</th>
+            <th>Deadline</th>
+            <th>Until deadline</th>
+            <th><button class="btn btn-danger btn-sm" name="delete_all">Delete selected</button></th>
+        </thead>
+
+        <tbody>
+            {% for info in data %}
+            <tr>
+                <td>
+                    {% if info.approve == 0 %}
+                    <input type="checkbox" {% if info.id|floatformat:'0' in del_all %} checked {% endif %} name="x[]"
+                        value="{{info.id}}">{{forloop.counter}}
+                    {% else %}
+                    {{forloop.counter}}
+                    {% endif %}
+                </td>
+                <td>{{info.assignment_name}}</td>
+                <td>{{info.staff_id.name}}</td>
+                <td>{{info.staff_id.pos_id.dep_id.department_name}}</td>
+                <td>{{info.staff_id.pos_id.positions}}</td>
+                <td>{{info.issue_date | date:'d-m-Y H:m:s'}}</td>
+                <td>{{info.deadline}}</td>
+                <td>{{info.qaliq}}</td>
+                <td>
+                    {% if info.approve == 0 %}
+                    <a class="btn btn-danger btn-sm" href="{% url 'assignment_del' info.id %}" title="Delete"><i
+                            class="bi bi-x"></i></a>
+                    <a class="btn btn-warning btn-sm" href="{% url 'assignment_edit' info.id %}" title="Edit"><i
+                            class="bi bi-pencil"></i></a>
+                    {% if info.qaliq == 'Finished' %}
+                    <a class="btn btn-dark btn-sm" href="{% url 'assignment_approve' info.id %}" title="Approve"><i
+                            class="bi bi-check"></i></a>
+                    {% else %}
+                    <a class="btn btn-primary btn-sm" href="{% url 'assignment_approve' info.id %}" title="Approve"><i
+                            class="bi bi-check"></i></a>
+                    {% endif %}
+                    {% else %}
+                    <a class="btn btn-danger btn-sm" href="{% url 'assignment_cancel' info.id %}" title="Cancel"><i
+                            class="bi bi-x"></i></a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}

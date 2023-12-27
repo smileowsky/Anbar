@@ -1,0 +1,123 @@
+{% extends 'layout.html' %}
+
+{% block 'content' %}
+
+<h1>Documents</h1>
+
+{% if messages %}
+<div class="alert alert-dismissible fade show" role="alert">
+  {% for message in messages %}
+  {% if 'success' in message.tags %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% elif 'error' in message.tags %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% elif 'warning' in message.tags %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if edit %}
+<div class="alert alert-primary" role="alert">
+  <form method="post" enctype="multipart/form-data" action="{% url 'doc_update' edit.id %}">
+    {% csrf_token %}
+    Employee name:<br>
+    <b> {{edit.staff.name}} {{edit.staff_id.surname}}</b><br>
+    Document name:
+    <input type="text" name="doc_name" value="{{edit.title}}" class="form-control">
+    Document number:
+    <input type="number" name="doc_num" value="{{edit.doc_num}}" class="form-control">
+    About:
+    <textarea name="about" rows="4" cols="10" class="form-control">{{edit.about}}</textarea>
+    Document photo:<br>
+    <img style="width: 50px; height: 60;" src="{{edit.scan_photo}}">
+    <input type="file" name="doc_photo" class="form-control"><br>
+    <button name="update" class="btn btn-primary">Update</button>
+    <a href="{% url 'documents' staf_id=staff.id %}"><button type="button" class="btn btn-danger">Cancel</button></a>
+  </form>
+</div>
+
+{% else %}
+<div class="alert alert-primary" role="alert">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    Employee name:<br>
+    <b>{{staff.name}} {{staff.surname}}</b><br>
+    Document name:
+    <input type="text" name="doc_name" class="form-control">
+    Document number:
+    <input type="number" name="doc_num" class="form-control">
+    About:
+    <textarea name="about" rows="4" cols="10" class="form-control"></textarea>
+    Document photo:s
+    <input type="file" name="doc_photo" class="form-control"><br>
+    <button name="upload" class="btn btn-primary">Upload</button>
+  </form>
+</div>
+{% endif %}
+
+{% if doc and staff %}
+<div class="alert alert-danger" role="alert">
+  Do you want to delete: <b>{{staff.name}} {{staff.surname}} - {{doc.title}} {{doc.doc_num}} </b>?<br>
+  <a class="btn btn-success" href="{% url 'doc_del_conf' doc.id %}">Yes</a>
+  <a class="btn btn-danger" href="{% url 'documents' staf_id=staff.id %}">No</a>
+</div>
+{% endif %}
+
+{% if del_all %}
+<div class="alert alert-danger" role="alert">
+  Do you want to delete selected items?<br>
+  <form method="post">
+    {% csrf_token %}
+    {% for id in del_all %}
+    <input type="hidden" name="x[]" value="{{id}}">
+    {% endfor %}
+    <button class="btn btn-success" name="confirm_delete_all">Yes</button>
+    <button class="btn btn-danger">No</button>
+  </form>
+</div>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <table class="table table-success table-striped" id="table">
+    <thead>
+      <th>#</th>
+      <th>Employee</th>
+      <th>Document name</th>
+      <th>Document number</th>
+      <th>Document photo</th>
+      <th><button class="btn btn-danger btn-sm" name="delete_all">Delete selected</button></th>
+    </thead>
+
+    <tbody>
+      {% for info in data %}
+      <tr>
+        <td><input type="checkbox" {% if info.id|floatformat:'0' in del_all %} checked {% endif %} name="x[]"
+            value="{{info.id}}">{{forloop.counter}}</td>
+        <td>{{info.staff_id.name}}</td>
+        <td>{{info.title}}</td>
+        <td>{{info.doc_num}}</td>
+        <td><img style="width: 50px; height: 60;" src="{{info.scan_photo}}"></td>
+        <td>
+          <a class="btn btn-danger btn-sm" href="{% url 'document_delete' info.id %}" title="Delete"><i
+              class="bi bi-x"></i></a>
+          <a class="btn btn-warning btn-sm" href="{% url 'doc_edit' info.id %}" title="Edit"><i
+              class="bi bi-pencil"></i></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</form>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'layout.html' %}
+
+{% block 'content' %}
+
+{% if messages %}
+<div class="alert alert-dismissible fade show" role="alert">
+    {% for message in messages %}
+    {% if 'success' in message.tags %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif 'error' in message.tags %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif 'warning' in message.tags %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if edit %}
+<div class="alert alert-primary" role="alert">
+    <h1>Suppliers</h1>
+    <form method="post" action="{% url 'supplier_update' edit.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        Photo:<br>
+        <img style="width: 60px; height: 60px;" src="{{edit.supplier_photo}}">
+        <input type="file" name="sup_photo" class="form-control">
+        Name:
+        <input type="text" name="sup_name" value="{{edit.supplier_name}}" class="form-control">
+        Surname:
+        <input type="text" name="sup_surname" value="{{edit.supplier_surname}}" class="form-control">
+        Company name:
+        <input type="text" name="sup_comp_name" value="{{edit.supplier_company_name}}" class="form-control">
+        Email:
+        <input type="email" name="supp_email" value="{{edit.supplier_email}}" class="form-control">
+        Phone:
+        <input type="tel" name="supp_phone" value="{{edit.supplier_phone}}" class="form-control">
+        Address:
+        <input type="text" name="supp_address" value="{{edit.supplier_address}}" class="form-control"><br>
+        <button name="update" class="btn btn-primary">Update</button>
+        <a href="{% url 'supplier' %}"><button type="button" class="btn btn-danger">Cancel</button> </a>
+    </form>
+</div>
+
+{% else %}
+<div class="alert alert-primary" role="alert">
+    <h1>Suppliers</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        Photo:
+        <input type="file" name="sup_photo" class="form-control">
+        Name:
+        <input type="text" name="sup_name" placeholder="Name..." class="form-control">
+        Surname:
+        <input type="text" name="sup_surname" placeholder="Surname..." class="form-control">
+        Company name:
+        <input type="text" name="sup_comp_name" placeholder="Company name..." class="form-control">
+        Email:
+        <input type="email" name="supp_email" placeholder="Email..." class="form-control">
+        Phone:
+        <input type="tel" name="supp_phone" placeholder="Telephon number..." class="form-control">
+        Address:
+        <input type="text" name="supp_address" placeholder="Address..." class="form-control"><br>
+        <button name="save" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+{% if del_all %}
+<div class="alert alert-danger" role="alert">
+    Do you want delete all selected?<br>
+    <form method="post">
+        {% csrf_token %}
+        {% for id in del_all %}
+        <input type="hidden" name="x[]" value="{{id}}">
+        {% endfor %}
+        <button class="btn btn-success" name="confirm_delete_all">Yes</button>
+        <button class="btn btn-danger">No</button>
+    </form>
+</div>
+
+{% endif %}
+
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <table class="table table-success table-striped" id="table">
+        <thead>
+            <th>#</th>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Company name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Date of add</th>
+            <th><button class="btn btn-danger btn-sm" name="delete_all">Delete selected</button> </th>
+        </thead>
+
+        <tbody>
+            {% for info in data %}
+            <tr>
+                <td>
+                    <input type="checkbox" {% if info.id|floatformat:'0' in del_all %} checked {% endif %} name="x[]"
+                    value="{{info.id}}">{{forloop.counter}}
+                </td>
+                <td><img style="width: 50px; height: 60px;" src="{{info.supplier_photo}}"></td>
+                <td>{{info.supplier_name}}</td>
+                <td>{{info.supplier_surname}}</td>
+                <td>{{info.supplier_company_name}}</td>
+                <td>{{info.supplier_email}}</td>
+                <td>{{info.supplier_phone}}</td>
+                <td>{{info.supplier_address}}</td>
+                <td>{{info.supplier_add_d | date:'d-m-Y'}}</td>
+                <td>
+                    <a class="btn btn-danger btn-sm" href="{% url 'supplier_delete' info.id %}" title="Delete"><i
+                            class="bi bi-x"></i></a>
+                    <a class="btn btn-warning btn-sm" href="{% url 'supplier_edit' info.id %}" title="Edit"><i
+                            class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block 'content' %}
+
+{% if messages %}
+<div class="alert alert-dismissible fade show" role="alert">
+    {% for message in messages %}
+    {% if 'success' in message.tags %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif 'error' in message.tags %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif 'warning' in message.tags %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+{{request.POST.name}}
+<div class="alert alert-primary" role="alert">
+    <h1>Profile</h1>
+    <form method="post" enctype="multipart/form-data" action="{% url 'user_profile_update' %}">
+        {% csrf_token %}
+        Add profile picture:
+        <input type="file" name="p_photo" class="form-control">
+        Name:
+        <input type="text" name="name" value="{{request.user.first_name}}" class="form-control">
+        Surname:
+        <input type="text" name="surname" value="{{request.user.last_name}}" class="form-control">
+        Username:
+        <input type="text" name="user_name" value="{{request.user.username}}" class="form-control">
+        Birth Date:
+        <input type="date" name="u_birth" value="{{request.user.birth_date | date:'Y-m-d'}}" class="form-control">
+        Email:
+        <input type="email" name="email" value="{{request.user.email}}" class="form-control">
+        Phone:
+        <input type="tel" name="tel_n" value="{{request.user.phone}}" placeholder="Add phone number"
+            class="form-control">
+        Company:
+        <input type="text" name="company_n" value="{{request.user.comp_name}}" placeholder="Add company name"
+            class="form-control">
+        Password:
+        <input type="password" name="password" placeholder="To save enter your password" class="form-control">
+        New Password:
+        <input type="password" name="n_password" placeholder="Enter new password, if you want to change it"
+            class="form-control">
+        Confirm new password:
+        <input type="password" name="c_password" placeholder="Re enter new password" class="form-control"><br>
+        <button name="update" class="btn btn-primary">Update</button>
+    </form>
+</div>
+{% endblock %}

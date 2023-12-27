@@ -1,0 +1,82 @@
+{% if request.user.is_authenticated %}
+
+<meta http-equiv="refresh" content="0; URL={%url 'user_profile'%}">
+
+{% else %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}"><i class="bi bi-house"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+      <form class="d-flex" method="post" action="{% url 'login_user' %}">
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="text" placeholder="Username" name="username"> &nbsp;
+        <input class="form-control mr-sm-2" type="password" placeholder="Password" name="password"> &nbsp;
+        <button class="btn btn-success my-2 my-sm-0" type="login" name="Login">Login</button>
+      </form> 
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+    <br><br><br>
+    {% if messages %}
+    <div class="alert alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+        {% if 'success' in message.tags %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% elif 'error' in message.tags %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% elif 'warning' in message.tags %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="alert alert-primary" role="alert">
+        <h1>Registration</h1>
+        <form method="post" action="{%url 'user_register'%}">
+            {% csrf_token %}
+            Name:
+            <input type="text" name="name" placeholder="Name..." class="form-control">
+            Surname:
+            <input type="text" name="surname" placeholder="Surname..." class="form-control">
+            Username:
+            <input type="text" name="username" placeholder="Username..." class="form-control">
+            Date of birth:
+            <input type="date" name="u_birth" class="form-control">
+            Email:
+            <input type="email" name="email" placeholder="Email..." class="form-control">
+            Phone:
+            <input type="tel" name="phone_n" placeholder="Phone number..." class="form-control">
+            Password:
+            <input type="password" name="password" placeholder="Password..." class="form-control">
+            Re-enter password:
+            <input type="password" name="r_password" placeholder="Re-enter password..." class="form-control"><br>
+            <button name="signup" class="btn btn-success">Sign Up</button>
+        </form>
+    </div>
+</div>
+{% endif %}
