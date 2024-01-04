@@ -7,7 +7,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Star Admin2 </title>
+  <title>Warehouse</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
   <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
@@ -405,17 +405,16 @@
         <ul class="nav">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">
-              <i class="mdi mdi-grid-large menu-icon"></i>
-              <span class="menu-title">Home/Profile</span>
+              <i class="mdi mdi-home menu-icon"></i>
+              <span class="menu-title">Home</span>
             </a>
           </li>
-          <li class="nav-item nav-category">HR releted</li>
+          <li class="nav-item nav-category">HR Related</li>
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
-              aria-controls="ui-basic">
-              <i class="menu-icon mdi mdi-floor-plan"></i>
-              <span class="menu-title">HR</span>
-              <i class="menu-arrow"></i>
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <i class="mdi mdi-file-document menu-icon"></i>
+              <span class="menu-title">HR related</span>
+              <i class="menu-arrow"></i> 
             </a>
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
@@ -426,12 +425,11 @@
               </ul>
             </div>
           </li>
-          <li class="nav-item nav-category">Warehouse releted</li>
+          <li class="nav-item nav-category">Warehouse Releted</li>
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
-              aria-controls="ui-basic">
-              <i class="menu-icon mdi mdi-floor-plan"></i>
-              <span class="menu-title">Warehouse</span>
+            <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+              <i class="mdi mdi-store menu-icon"></i>
+              <span class="menu-title">Warehouse Releted</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="form-elements">
@@ -439,12 +437,30 @@
                 <li class="nav-item"> <a class="nav-link" href="{% url 'brand' %}">Brands</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{% url 'client' %}">Clients</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{% url 'expens' %}">Expenses</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'orders' %}">Orders</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{% url 'products' %}">Products</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'orders' %}">Orders</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{% url 'supplier' %}">Suppliers</a></li>
               </ul>
             </div>
           </li>
+          <li class="nav-item nav-category">pages</li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="menu-icon mdi mdi-account-circle-outline"></i>
+              <span class="menu-title">User Pages</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                {% if request.user.is_authenticated %}
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'logout_user' %}"> Logout </a></li>
+                {% else %}
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'login_user' %}"> Login </a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </li>
+        </ul>
       </nav>
       <!-- partial -->
       <div class="main-panel">
@@ -469,10 +485,7 @@
     <!-- partial:partials/_footer.html -->
     <footer class="footer">
       <div class="d-sm-flex justify-content-center justify-content-sm-between">
-        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a
-            href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from
-          BootstrapDash.</span>
-        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights
+        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">by SmileOwsky. Copyright © 2024. All rights
           reserved.</span>
       </div>
     </footer>

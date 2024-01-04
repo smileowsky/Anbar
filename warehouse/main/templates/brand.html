@@ -45,16 +45,16 @@
             <label>File upload</label>
             <input type="file" name="brand_photo" class="file-upload-default">
             <div class="input-group col-xs-12">
-              <img style="width: 70px; height: 60px;" src="{{edit.brad_pic}}">
-              <input type="file" class="form-control file-upload-info" disabled placeholder="Upload Image"
+              <img class="img-md rounded-circle" style="width: 70px; height: 60px;" src="{{edit.brand_pic}}">
+              <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image"
                 name="brand_photo">
               <span class="input-group-append">
                 <button class="file-upload-browse btn btn-primary text-white" type="button">Upload</button>
               </span>
             </div>
           </div>
-          <button type="submit" name="save1" class="btn btn-primary me-2">Save</button>
-          <a href="{% url 'brand' %}"><button type="button" class="btn btn-danger">Cancel</button></a>
+          <button type="submit" name="save1" class="btn btn-primary me-2 text-white">Update</button>
+          <a href="{% url 'brand' %}"><button type="button" class="btn btn-danger text-white">Cancel</button></a>
         </form>
       </div>
     </div>
@@ -97,8 +97,8 @@
 {% if brand %}
 <div class="alert alert-danger" role="alert">
   Do you want to delete brand: <br><b>{{brand.brand_name}}</b>?<br><br>
-  <a class="btn btn-success" href="{% url 'delete_config' brand.id %}">Yes</a>
-  <a class="btn btn-danger" href="{% url 'brand' %}">No</a><br>
+  <a class="btn btn-success text-white" href="{% url 'delete_config' brand.id %}">Yes</a>
+  <a class="btn btn-danger text-white" href="{% url 'brand' %}">No</a><br>
 </div>
 {% endif %}
 
@@ -177,9 +177,9 @@
                   <td>{{info.brand_name}}</td>
                   <td>{{info.add_date | date:'d-m-Y'}}</td>
                   <td>
-                    <a class="btn btn-danger btn-round btn-sm" href="{% url 'delete' info.id %}"><i
+                    <a class="btn btn-danger btn-round btn-md" href="{% url 'delete' info.id %}"><i
                         class="mdi mdi-delete"></i></a>
-                    <a class="btn btn-warning btn-round btn-sm" href="{% url 'edit' info.id %}"><i
+                    <a class="btn btn-warning btn-round btn-md" href="{% url 'edit' info.id %}"><i
                         class="mdi mdi-grease-pencil"></i></a>
                   </td>
                 </tr>
