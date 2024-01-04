@@ -36,6 +36,11 @@ supplier_num = Supplier.objects.all().count()
 def home(request):
     return render(request, 'home.html')
 
+def main(request):
+    return render(request, 'main_layout.html')
+
+def basic(request):
+    return render(request, 'basic.html')
 
 def brand(request):
     data = ''
