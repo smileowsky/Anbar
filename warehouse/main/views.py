@@ -41,6 +41,10 @@ def main(request):
     return render(request, 'main_layout.html')
 
 
+def basic(request):
+    return render(request, 'basic.html')
+
+
 def brand(request):
     data = ''
     del_all = []
